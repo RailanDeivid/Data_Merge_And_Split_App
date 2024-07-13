@@ -3,3 +3,4 @@ pandas
 io
 streamlit_option_menu
 zipfile
+pip == 24.1.1
