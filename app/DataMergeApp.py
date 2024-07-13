@@ -9,9 +9,20 @@ st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout=
 
 # Função para combinar arquivos
 def combinar_arquivos():
-    st.subheader("Combinar Arquivos")
+    # Setar título
+    st.markdown("""
+        <style>
+            .rounded-title {
+                text-align: center; 
+                font-size: 40px;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<h1 class='rounded-title'>Combinar Arquivos</h1><br>", unsafe_allow_html=True)
     st.write("Faça upload de múltiplos arquivos XLSX ou CSV para combiná-los em um único arquivo XLSX.")
-    st.info("""Certifique-se de que os arquivos tenham a mesma quantidade de colunas com as mesmas nomenclaturas. Caso sejam arquivos de Excel com várias abas a serem combinadas, verifique se os nomes das abas são consistentes em todos os arquivos selecionados.""", icon="ℹ️")
+    st.info("""Certifique-se de que os arquivos tenham a mesma quantidade de colunas com as mesmas nomenclaturas.
+            Caso sejam arquivos de Excel com várias abas a serem combinadas, verifique se os nomes das abas são consistentes em todos os arquivos selecionados.""", icon=":material/info:")
 
     
     # Upload dos arquivos
@@ -106,9 +117,21 @@ filtered_data_dict = {}
 # Função para separar arquivos
 def separar_arquivos():
     global filtered_data_dict  # Acesso ao dicionário global
+    # Setar título
+    st.markdown("""
+        <style>
+            .rounded-title {
+                text-align: center; 
+                font-size: 40px;
+            }
+        </style>
+        """, unsafe_allow_html=True)
 
-    st.subheader("Separar Arquivos")
+    st.markdown("<h1 class='rounded-title'>Separar Arquivos</h1><br>", unsafe_allow_html=True)
+
     st.write("Selecione um arquivo XLSX para separá-lo com base em uma coluna ou aba específica ou um arquivo CSV")
+    st.info("""Certifique-se de que os arquivos tenham a mesma quantidade de colunas com as mesmas nomenclaturas.
+            Caso sejam arquivos de Excel com várias abas a serem combinadas, verifique se os nomes das abas são consistentes em todos os arquivos selecionados.""", icon=":material/info:")
 
     # Upload do arquivo
     uploaded_file = st.file_uploader("Escolha um arquivo XLSX ou CSV", type=['xlsx', 'csv'])
