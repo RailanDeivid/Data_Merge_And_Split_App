@@ -1,6 +1,4 @@
 streamlit==1.36.0
 pandas==2.2.2
-io
-zipfile
 pip == 24.1.1
 streamlit-option-menu ==0.3.13
