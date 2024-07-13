@@ -3,6 +3,8 @@ import pandas as pd
 import io
 from streamlit_option_menu import option_menu
 import zipfile
+import tempfile
+import os
 
 # Configuração da página
 st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout="wide")
@@ -111,12 +113,10 @@ def combinar_arquivos():
             )
     pass
 
-# Dicionário para armazenar os DataFrames filtrados
-filtered_data_dict = {}
+# Função para separar arquivos
 
 # Função para separar arquivos
 def separar_arquivos():
-    global filtered_data_dict  # Acesso ao dicionário global
     # Setar título
     st.markdown("""
         <style>
@@ -137,6 +137,12 @@ def separar_arquivos():
     uploaded_file = st.file_uploader("Escolha um arquivo XLSX ou CSV", type=['xlsx', 'csv'])
 
     if uploaded_file:
+        # Limpa o st.session_state se um novo arquivo for carregado
+        if 'last_uploaded_file' in st.session_state and st.session_state.last_uploaded_file != uploaded_file.name:
+            st.session_state.filtered_data_dict = {}
+            st.session_state.separated_data = False
+        st.session_state.last_uploaded_file = uploaded_file.name
+
         if uploaded_file.name.endswith('.xlsx'):
             # Se o arquivo for XLSX, mostra opções para selecionar aba e coluna
             xls = pd.ExcelFile(uploaded_file)
@@ -182,18 +188,29 @@ def separar_arquivos():
         # Obtém os valores únicos da coluna selecionada
         unique_values = df[selected_column].unique()
 
+        # Inicializa st.session_state se necessário
+        if 'filtered_data_dict' not in st.session_state:
+            st.session_state.filtered_data_dict = {}
+        if 'separated_data' not in st.session_state:
+            st.session_state.separated_data = False
+
         # Cria um botão para separar os dados com base na escolha do usuário
         if st.button("Separar Dados"):
             for value in unique_values:
                 # Filtra o DataFrame com base no valor único da coluna selecionada
                 filtered_data = df[df[selected_column] == value]
 
-                # Armazena o DataFrame filtrado no dicionário
-                filtered_data_dict[value] = filtered_data
+                # Guarda os dados filtrados em st.session_state
+                st.session_state.filtered_data_dict[value] = filtered_data
+            st.session_state.separated_data = True
 
-                # Mostra os dados filtrados
+        # Exibe e disponibiliza para download os dados separados armazenados em st.session_state
+        if st.session_state.separated_data:
+            for value, filtered_data in st.session_state.filtered_data_dict.items():
+                st.markdown("---")
                 st.subheader(f"Dados separados para '{value}':")
-                st.write(filtered_data.head(10))
+                st.write(filtered_data.head())
+                
 
                 # Download do arquivo separado
                 output = io.BytesIO()
@@ -207,26 +224,14 @@ def separar_arquivos():
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
 
-            # Botão para baixar todos os arquivos separados
-            st.markdown("---")
-            if st.button("Baixar Todos os Arquivos Separados"):
-                zip_output = io.BytesIO()
-                with zipfile.ZipFile(zip_output, 'w') as zipf:
-                    for value, data in filtered_data_dict.items():
-                        filename = f"Dados_{value}.xlsx"  # Nome do arquivo no zip
-                        output = io.BytesIO()
-                        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                            data.to_excel(writer, index=False, sheet_name=f'Dados_{value}')
-                        output.seek(0)
-                        zipf.writestr(filename, output.read())
-                
-                zip_output.seek(0)
-                st.download_button(
-                    label="Baixar Todos os Arquivos",
-                    data=zip_output,
-                    file_name="dados_separados.zip",
-                    mime="application/zip"
-                )
+            # Botão para limpar os dados armazenados em st.session_state
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.info("Antes de fazer outra operação, limpe os dados!", icon=":material/warning:")
+            if st.button("Limpar Dados"):
+                st.session_state.filtered_data_dict = {}
+                st.session_state.separated_data = False
+                st.experimental_rerun()
+
 
 
                 
