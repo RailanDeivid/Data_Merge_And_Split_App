@@ -244,7 +244,7 @@ def separar_arquivos():
                         
                         # Formata a área dos dados como uma tabela
                         tab = Table(displayName=str(ws.title), ref=ws.dimensions)
-                        tab.tableStyleInfo = TableStyleInfo(name='TableStyleMedium9', showFirstColumn=False,
+                        tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
                                                             showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                         ws.add_table(tab)
 
@@ -265,7 +265,7 @@ def separar_arquivos():
                     
                     # Formata a área dos dados como uma tabela
                     tab = Table(displayName=str(ws.title), ref=ws.dimensions)
-                    tab.tableStyleInfo = TableStyleInfo(name='TableStyleMedium9', showFirstColumn=False,
+                    tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
                                                         showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                     ws.add_table(tab)
 
