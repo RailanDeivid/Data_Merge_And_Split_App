@@ -15,8 +15,8 @@ st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout=
 st.markdown("""
     <style>
         .contact-me {
-            display: inline-block;
             text-align: center; /* Centraliza o texto */
+            display: inline-block;
             font-size: 12px;
             color: hsl(0, 0%, 35%);
             border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
