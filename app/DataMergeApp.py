@@ -19,9 +19,10 @@ st.markdown("""
             text-align: center; 
             font-size: 9px;
             color: gray;
-            border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
-            padding: 5px; /* Adiciona um preenchimento interno de 5px */
-            border-radius: 5px; /* Adiciona bordas arredondadas */
+            border: 1px solid gray; 
+            padding: 5px; 
+            border-radius: 5px;
+            display: inline-block;
         }
     </style>
     """, unsafe_allow_html=True)
