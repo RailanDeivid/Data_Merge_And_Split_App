@@ -129,6 +129,24 @@ def combinar_arquivos():
     pass
 
 
+
+
+                
+# ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
+cols1, cols2, cols3 = st.columns([1, 2, 1])
+with cols2:
+    selected_page = option_menu(
+        menu_title=None,
+        options=["Combinar Arquivos", "Separar Arquivos"],
+        icons=["files", "file-earmark-break"],
+        menu_icon="cast",
+        default_index=0,
+        orientation="horizontal"
+    )
+
+# Lógica de seleção da página
+if selected_page == "Combinar Arquivos":
+    combinar_arquivos()
 def separar_arquivos():
     # Setar título
     st.markdown("""
@@ -192,6 +210,7 @@ def separar_arquivos():
                 with cols[2]:
                     selected_column_1 = st.selectbox("Selecione a coluna para separar os dados:", col_options)
 
+
             except UnicodeDecodeError:
                 st.error(f"Erro ao ler o arquivo '{uploaded_file.name}'. Verifique o encoding selecionado.")
                 return
@@ -208,85 +227,79 @@ def separar_arquivos():
 
         # Cria um botão para separar os dados com base na escolha do usuário
         if st.button("Separar Dados"):
-            st.write("Clicou em Separar Dados")  # Debug message
+            # Para cada valor único na primeira coluna selecionada
+            for valor_coluna_1 in df[selected_column_1].unique():
+                # Filtra o DataFrame com base no valor único da primeira coluna
+                dados_filtrados_1 = df[df[selected_column_1] == valor_coluna_1]
 
-            # Cria um diretório temporário para salvar os arquivos separados
-            with tempfile.TemporaryDirectory() as temp_dir:
-                # Para cada valor único na primeira coluna selecionada
-                for valor_coluna_1 in df[selected_column_1].unique():
-                    if isinstance(valor_coluna_1, str) and valor_coluna_1.strip():
-                        st.write(f"Processando valor único: {valor_coluna_1}")  # Debug message
+                # Inicializa um novo arquivo Excel para cada valor único da primeira coluna
+                nome_arquivo = f'{valor_coluna_1}.xlsx'
+                wb = Workbook()
+                default_sheet = wb.active
+                wb.remove(default_sheet)
 
-                        # Filtra o DataFrame com base no valor único da primeira coluna
-                        dados_filtrados_1 = df[df[selected_column_1] == valor_coluna_1]
 
-                        # Inicializa um novo arquivo Excel temporário para cada valor único da primeira coluna
-                        nome_arquivo_temporario = os.path.join(temp_dir, f'{valor_coluna_1}.xlsx')
-                        wb = Workbook()
-                        default_sheet = wb.active
-                        wb.remove(default_sheet)
 
-                        if uploaded_file.name.endswith('.xlsx') and metodo_separacao == 'Separar por coluna e abas':
-                            # Para cada valor único na segunda coluna dentro do DataFrame filtrado pela primeira coluna
-                            for valor_coluna_2 in dados_filtrados_1[selected_column_2].unique():
-                                # Filtra o DataFrame com base no valor único da segunda coluna
-                                dados_filtrados_2 = dados_filtrados_1[dados_filtrados_1[selected_column_2] == valor_coluna_2]
-                                
-                                # Limpar espaços em branco do nome da aba
-                                nome_aba = str(valor_coluna_2).strip()
+                if uploaded_file.name.endswith('.xlsx') and metodo_separacao == 'Separar por coluna e abas':
+                    # Para cada valor único na segunda coluna dentro do DataFrame filtrado pela primeira coluna
+                    for valor_coluna_2 in dados_filtrados_1[selected_column_2].unique():
+                        # Filtra o DataFrame com base no valor único da segunda coluna
+                        dados_filtrados_2 = dados_filtrados_1[dados_filtrados_1[selected_column_2] == valor_coluna_2]
+                        
+                        # Limpar espaços em branco do nome da aba
+                        nome_aba = str(valor_coluna_2).strip()
 
-                                # Verifique se o nome da aba é válido (não pode conter espaços)
-                                if ' ' in nome_aba:
-                                    nome_aba = nome_aba.replace(' ', '_')
+                        # Verifique se o nome da aba é válido (não pode conter espaços)
+                        if ' ' in nome_aba:
+                            nome_aba = nome_aba.replace(' ', '_')
 
-                                # Criar a aba no workbook
-                                ws = wb.create_sheet(title=nome_aba)
+                        # Criar a aba no workbook
+                        ws = wb.create_sheet(title=nome_aba)
 
-                                # Adiciona os dados do DataFrame filtrado à planilha
-                                df_filtrado_2 = pd.DataFrame(dados_filtrados_2)
-                                df_filtrado_2 = df_filtrado_2.sort_values(by=[selected_column_1, selected_column_2], ascending=True)
+                        # Adiciona os dados do DataFrame filtrado à planilha
+                        df_filtrado_2 = pd.DataFrame(dados_filtrados_2)
+                        df_filtrado_2 = df_filtrado_2.sort_values(by=[selected_column_1, selected_column_2], ascending=True)
 
-                                for row in dataframe_to_rows(df_filtrado_2, index=False, header=True):
-                                    ws.append(row)
-                                
-                                # Formata a área dos dados como uma tabela
-                                tab = Table(displayName=str(ws.title), ref=ws.dimensions)
-                                tab.tableStyleInfo = TableStyleInfo(name='TableStyleMedium9', showFirstColumn=False,
-                                                                    showLastColumn=False, showRowStripes=True, showColumnStripes=True)
-                                ws.add_table(tab)
+                        for row in dataframe_to_rows(df_filtrado_2, index=False, header=True):
+                            ws.append(row)
+                        
+                        # Formata a área dos dados como uma tabela
+                        tab = Table(displayName=str(ws.title), ref=ws.dimensions)
+                        tab.tableStyleInfo = TableStyleInfo(name='TableStyleMedium9', showFirstColumn=False,
+                                                            showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+                        ws.add_table(tab)
 
-                        else:
-                            # Se o método de separação for apenas por uma coluna
-                            # Verifique se o nome da aba é válido (não pode conter espaços)
-                            if ' ' in valor_coluna_1:
-                                valor_coluna_1 = valor_coluna_1.replace(' ', '_')
 
-                            ws = wb.create_sheet(title=str(valor_coluna_1))
 
-                            # Adiciona os dados do DataFrame filtrado à planilha
-                            df_filtrado_1 = pd.DataFrame(dados_filtrados_1)
-                            df_filtrado_1 = df_filtrado_1.sort_values(by=[selected_column_1], ascending=True)
+                else:
+                    # Se o método de separação for apenas por uma coluna
+                    # Verifique se o nome da aba é válido (não pode conter espaços)
+                    if ' ' in valor_coluna_1:
+                        valor_coluna_1 = valor_coluna_1.replace(' ', '_')
 
-                            for row in dataframe_to_rows(df_filtrado_1, index=False, header=True):
-                                ws.append(row)
-                            
-                            # Formata a área dos dados como uma tabela
-                            tab = Table(displayName=str(ws.title), ref=ws.dimensions)
-                            tab.tableStyleInfo = TableStyleInfo(name='TableStyleMedium9', showFirstColumn=False,
-                                                                showLastColumn=False, showRowStripes=True, showColumnStripes=True)
-                            ws.add_table(tab)
+                    ws = wb.create_sheet(title=str(valor_coluna_1))
 
-                        # Salva o arquivo temporário no diretório temporário
-                        wb.save(nome_arquivo_temporario)
+                    # Adiciona os dados do DataFrame filtrado à planilha
+                    df_filtrado_1 = pd.DataFrame(dados_filtrados_1)
+                    df_filtrado_1 = df_filtrado_1.sort_values(by=[selected_column_1], ascending=True)
 
-                        # Guarda os dados filtrados em st.session_state
-                        st.session_state.filtered_data_dict[valor_coluna_1] = nome_arquivo_temporario
+                    for row in dataframe_to_rows(df_filtrado_1, index=False, header=True):
+                        ws.append(row)
+                    
+                    # Formata a área dos dados como uma tabela
+                    tab = Table(displayName=str(ws.title), ref=ws.dimensions)
+                    tab.tableStyleInfo = TableStyleInfo(name='TableStyleMedium9', showFirstColumn=False,
+                                                        showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+                    ws.add_table(tab)
 
-                st.session_state.separated_data = True
+                
+                # Guarda os dados filtrados em st.session_state
+                st.session_state.filtered_data_dict[valor_coluna_1] = nome_arquivo
+                wb.save(nome_arquivo)
+            st.session_state.separated_data = True
 
         # Exibe e disponibiliza para download os dados separados armazenados em st.session_state
         if st.session_state.separated_data:
-            st.write("Dados separados estão disponíveis para download.")  # Debug message
             for valor_coluna_1, nome_arquivo in st.session_state.filtered_data_dict.items():
                 st.markdown("---")
                 st.subheader(f"Dados separados para '{valor_coluna_1}':")
@@ -301,7 +314,7 @@ def separar_arquivos():
                     st.download_button(
                         label=f"Baixar Dados para '{valor_coluna_1}'",
                         data=file,
-                        file_name=os.path.basename(nome_arquivo),
+                        file_name=nome_arquivo,
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
 
@@ -312,24 +325,5 @@ def separar_arquivos():
                 st.session_state.filtered_data_dict = {}
                 st.session_state.separated_data = False
                 st.experimental_rerun()
-
-
-                
-# ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
-cols1, cols2, cols3 = st.columns([1, 2, 1])
-with cols2:
-    selected_page = option_menu(
-        menu_title=None,
-        options=["Combinar Arquivos", "Separar Arquivos"],
-        icons=["files", "file-earmark-break"],
-        menu_icon="cast",
-        default_index=0,
-        orientation="horizontal"
-    )
-
-# Lógica de seleção da página
-if selected_page == "Combinar Arquivos":
-    combinar_arquivos()
-
 elif selected_page == "Separar Arquivos":
     separar_arquivos()
