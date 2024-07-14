@@ -21,7 +21,8 @@ st.markdown("""
             border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
             padding: 5px; /* Adiciona um preenchimento interno de 5px */
             border-radius: 5px; /* Adiciona bordas arredondadas */
-            display: inline-block; /* Faz com que a borda se ajuste ao tamanho do texto */
+            margin-left: auto; /* Centraliza horizontalmente */
+            margin-right: auto; /* Centraliza horizontalmente */
         }
         .linkedin-icon {
             width: 15px;
