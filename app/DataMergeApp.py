@@ -29,7 +29,7 @@ st.markdown("""
         }
     </style>
     """, unsafe_allow_html=True)
-st.markdown("<div class='rounded-info-container'><p class='rounded-info'>💡 Desenvolvido por Railan Deivid</p>", unsafe_allow_html=True)
+st.markdown("<div class='rounded-info-container'><p class='rounded-info'>💡 Desenvolvido por Railan Deivid<br> contate-me</p>", unsafe_allow_html=True)
 
 # ----------------------------------------------- Função para combinar arquivos ------------------------------------- #
 def combinar_arquivos():
