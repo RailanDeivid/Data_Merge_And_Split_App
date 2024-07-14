@@ -128,25 +128,6 @@ def combinar_arquivos():
             )
     pass
 
-
-
-
-                
-# ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
-cols1, cols2, cols3 = st.columns([1, 2, 1])
-with cols2:
-    selected_page = option_menu(
-        menu_title=None,
-        options=["Combinar Arquivos", "Separar Arquivos"],
-        icons=["files", "file-earmark-break"],
-        menu_icon="cast",
-        default_index=0,
-        orientation="horizontal"
-    )
-
-# Lógica de seleção da página
-if selected_page == "Combinar Arquivos":
-    combinar_arquivos()
 def separar_arquivos():
     # Setar título
     st.markdown("""
@@ -325,5 +306,24 @@ def separar_arquivos():
                 st.session_state.filtered_data_dict = {}
                 st.session_state.separated_data = False
                 st.experimental_rerun()
+
+
+                
+# ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
+cols1, cols2, cols3 = st.columns([1, 2, 1])
+with cols2:
+    selected_page = option_menu(
+        menu_title=None,
+        options=["Combinar Arquivos", "Separar Arquivos"],
+        icons=["files", "file-earmark-break"],
+        menu_icon="cast",
+        default_index=0,
+        orientation="horizontal"
+    )
+
+# Lógica de seleção da página
+if selected_page == "Combinar Arquivos":
+    combinar_arquivos()
+
 elif selected_page == "Separar Arquivos":
     separar_arquivos()
