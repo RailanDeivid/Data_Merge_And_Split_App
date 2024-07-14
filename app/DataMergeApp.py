@@ -228,9 +228,9 @@ def separar_arquivos():
                         # Limpar espaços em branco do nome da aba
                         nome_aba = str(valor_coluna_2).strip()
 
-                        # Verifique se o nome da aba é válido (não pode conter espaços)
-                        if isinstance(nome_aba, str) and ' ' in nome_aba:
-                            nome_aba = nome_aba.replace(' ', '_')
+                        # # Verifique se o nome da aba é válido (não pode conter espaços)
+                        # if isinstance(nome_aba, str) and ' ' in nome_aba:
+                        #     nome_aba = nome_aba.replace(' ', '_')
 
                         # Criar a aba no workbook
                         ws = wb.create_sheet(title=nome_aba)
@@ -251,8 +251,8 @@ def separar_arquivos():
                 else:
                     # Se o método de separação for apenas por uma coluna
                     # Verifique se o nome da aba é válido (não pode conter espaços)
-                    if isinstance(valor_coluna_1, str) and ' ' in valor_coluna_1:
-                        valor_coluna_1 = valor_coluna_1.replace(' ', '_')
+                    # if isinstance(valor_coluna_1, str) and ' ' in valor_coluna_1:
+                    #     valor_coluna_1 = valor_coluna_1.replace(' ', '_')
 
                     ws = wb.create_sheet(title=str(valor_coluna_1))
 
