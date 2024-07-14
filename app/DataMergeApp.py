@@ -17,7 +17,7 @@ st.markdown("""
         .contact-me {
             text-align: center; /* Centraliza o texto */
             font-size: 12px;
-            color: hsl(0, 0%, 50%);
+            color: hsl(0, 0%, 10%);
         }
         .linkedin-icon {
             width: 15px;
