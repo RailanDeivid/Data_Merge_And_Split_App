@@ -16,14 +16,9 @@ st.markdown("""
     <style>
         .contact-me {
             text-align: center; /* Centraliza o texto */
-            display: inline-block;
             font-size: 12px;
             color: hsl(0, 0%, 35%);
-            border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
-            padding: 5px; /* Adiciona um preenchimento interno de 5px */
-            border-radius: 5px; /* Adiciona bordas arredondadas */
-            margin-left: auto; /* Centraliza horizontalmente */
-            margin-right: auto; /* Centraliza horizontalmente */
+            
         }
         .linkedin-icon {
             width: 15px;
