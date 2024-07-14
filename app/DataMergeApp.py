@@ -12,17 +12,20 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 
 # Configuração da página
 st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout="wide")
-
 st.markdown("""
     <style>
+        .rounded-info-container {
+            text-align: center; /* Centraliza o texto */
+        }
         .rounded-info {
-            text-align: center; 
+            display: inline-block; /* Faz com que a borda se ajuste ao tamanho do texto */
             font-size: 9px;
             color: gray;
-            border: 1px solid gray; 
-            padding: 5px; 
-            border-radius: 5px;
-            display: inline-block;
+            border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
+            padding: 5px; /* Adiciona um preenchimento interno de 5px */
+            border-radius: 5px; /* Adiciona bordas arredondadas */
+            margin-left: auto; /* Centraliza horizontalmente */
+            margin-right: auto; /* Centraliza horizontalmente */
         }
     </style>
     """, unsafe_allow_html=True)
