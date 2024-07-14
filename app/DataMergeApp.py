@@ -219,8 +219,6 @@ def separar_arquivos():
                 default_sheet = wb.active
                 wb.remove(default_sheet)
 
-
-
                 if uploaded_file.name.endswith('.xlsx') and metodo_separacao == 'Separar por coluna e abas':
                     # Para cada valor único na segunda coluna dentro do DataFrame filtrado pela primeira coluna
                     for valor_coluna_2 in dados_filtrados_1[selected_column_2].unique():
@@ -231,7 +229,7 @@ def separar_arquivos():
                         nome_aba = str(valor_coluna_2).strip()
 
                         # Verifique se o nome da aba é válido (não pode conter espaços)
-                        if ' ' in nome_aba:
+                        if isinstance(nome_aba, str) and ' ' in nome_aba:
                             nome_aba = nome_aba.replace(' ', '_')
 
                         # Criar a aba no workbook
@@ -250,12 +248,10 @@ def separar_arquivos():
                                                             showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                         ws.add_table(tab)
 
-
-
                 else:
                     # Se o método de separação for apenas por uma coluna
                     # Verifique se o nome da aba é válido (não pode conter espaços)
-                    if ' ' in valor_coluna_1:
+                    if isinstance(valor_coluna_1, str) and ' ' in valor_coluna_1:
                         valor_coluna_1 = valor_coluna_1.replace(' ', '_')
 
                     ws = wb.create_sheet(title=str(valor_coluna_1))
@@ -273,7 +269,6 @@ def separar_arquivos():
                                                         showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                     ws.add_table(tab)
 
-                
                 # Guarda os dados filtrados em st.session_state
                 st.session_state.filtered_data_dict[valor_coluna_1] = nome_arquivo
                 wb.save(nome_arquivo)
