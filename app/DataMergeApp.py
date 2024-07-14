@@ -20,14 +20,14 @@ st.markdown("""
             color: gray;
         }
         .linkedin-icon {
-            width: 20px;
+            width: 15px;
             vertical-align: middle;
             margin-left: 5px;
         }
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown("<p class='contact-me'>💡 Desenvolvido por Railan Deivid<br>Contate-me via <a href='https://www.linkedin.com/in/railandeivid/' target='_blank'> <img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' class='linkedin-icon'></a></p>", unsafe_allow_html=True)
+st.markdown("<p class='contact-me'>💡 Desenvolvido por Railan Deivid<br>Contate-me via <a href='https://www.linkedin.com/in/railandeivid/' target='_blank'><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' class='linkedin-icon'></a></p>", unsafe_allow_html=True)
 
 # ----------------------------------------------- Função para combinar arquivos ------------------------------------- #
 def combinar_arquivos():
