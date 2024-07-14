@@ -129,7 +129,6 @@ def combinar_arquivos():
     pass
 
 
-
 def separar_arquivos():
     # Setar título
     st.markdown("""
@@ -209,11 +208,15 @@ def separar_arquivos():
 
         # Cria um botão para separar os dados com base na escolha do usuário
         if st.button("Separar Dados"):
+            st.write("Clicou em Separar Dados")  # Debug message
+
             # Cria um diretório temporário para salvar os arquivos separados
             with tempfile.TemporaryDirectory() as temp_dir:
                 # Para cada valor único na primeira coluna selecionada
                 for valor_coluna_1 in df[selected_column_1].unique():
                     if isinstance(valor_coluna_1, str) and valor_coluna_1.strip():
+                        st.write(f"Processando valor único: {valor_coluna_1}")  # Debug message
+
                         # Filtra o DataFrame com base no valor único da primeira coluna
                         dados_filtrados_1 = df[df[selected_column_1] == valor_coluna_1]
 
@@ -283,11 +286,17 @@ def separar_arquivos():
 
         # Exibe e disponibiliza para download os dados separados armazenados em st.session_state
         if st.session_state.separated_data:
+            st.write("Dados separados estão disponíveis para download.")  # Debug message
             for valor_coluna_1, nome_arquivo in st.session_state.filtered_data_dict.items():
                 st.markdown("---")
                 st.subheader(f"Dados separados para '{valor_coluna_1}':")
 
-                # Download do arquivo temporário
+                # Mostra os dados tratados se for XLSX com método 'Separar por uma coluna'
+                if uploaded_file.name.endswith('.xlsx') and metodo_separacao == 'Separar por uma coluna':
+                    df_tratado = pd.read_excel(nome_arquivo, sheet_name=str(valor_coluna_1).replace(" ", "_").replace("/", "_"))
+                    st.write(df_tratado.head())
+                
+                # Download do arquivo separado
                 with open(nome_arquivo, 'rb') as file:
                     st.download_button(
                         label=f"Baixar Dados para '{valor_coluna_1}'",
@@ -296,16 +305,14 @@ def separar_arquivos():
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
 
-        else:
-            st.info("Nenhum dado separado disponível para download.")
+            # Botão para limpar os dados armazenados em st.session_state
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.info("Antes de fazer outra operação, limpe os dados!", icon=":material/warning:")
+            if st.button("Limpar Dados"):
+                st.session_state.filtered_data_dict = {}
+                st.session_state.separated_data = False
+                st.experimental_rerun()
 
-        # Botão para limpar os dados armazenados em st.session_state
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.info("Antes de fazer outra operação, limpe os dados!", icon=":material/warning:")
-        if st.button("Limpar Dados"):
-            st.session_state.filtered_data_dict = {}
-            st.session_state.separated_data = False
-            st.experimental_rerun()
 
                 
 # ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
