@@ -2,12 +2,21 @@ import streamlit as st
 import pandas as pd
 import io
 from streamlit_option_menu import option_menu
-import zipfile
-import tempfile
-import os
+import streamlit_shadcn_ui as ui
 
 # Configuração da página
 st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout="wide")
+
+st.markdown("""
+    <style>
+        .rounded-info {
+            text-align: center; 
+            font-size: 9px;
+            color: gray;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+st.markdown("<p class='rounded-info'>💡 Desenvolvido por Railan Deivid</p>", unsafe_allow_html=True)
 
 # Função para combinar arquivos
 def combinar_arquivos():
