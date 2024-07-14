@@ -14,22 +14,20 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout="wide")
 st.markdown("""
     <style>
-        .rounded-info-container {
+        .contact-me {
             text-align: center; /* Centraliza o texto */
-        }
-        .rounded-info {
-            display: inline-block; /* Faz com que a borda se ajuste ao tamanho do texto */
-            font-size: 9px;
+            font-size: 14px;
             color: gray;
-            border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
-            padding: 5px; /* Adiciona um preenchimento interno de 5px */
-            border-radius: 5px; /* Adiciona bordas arredondadas */
-            margin-left: auto; /* Centraliza horizontalmente */
-            margin-right: auto; /* Centraliza horizontalmente */
+        }
+        .linkedin-icon {
+            width: 20px;
+            vertical-align: middle;
+            margin-left: 5px;
         }
     </style>
     """, unsafe_allow_html=True)
-st.markdown("<div class='rounded-info-container'><p class='rounded-info'>💡 Desenvolvido por Railan Deivid<br> contate-me</p>", unsafe_allow_html=True)
+
+st.markdown("<p class='contact-me'>Contate-me via <a href='https://www.linkedin.com/in/railandeivid/' target='_blank'>LinkedIn</a> <img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' class='linkedin-icon'></p>", unsafe_allow_html=True)
 
 # ----------------------------------------------- Função para combinar arquivos ------------------------------------- #
 def combinar_arquivos():
