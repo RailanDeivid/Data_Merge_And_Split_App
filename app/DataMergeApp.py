@@ -283,26 +283,29 @@ def separar_arquivos():
 
         # Exibe e disponibiliza para download os dados separados armazenados em st.session_state
         if st.session_state.separated_data:
-            for valor_coluna_1, nome_arquivo_temporario in st.session_state.filtered_data_dict.items():
+            for valor_coluna_1, nome_arquivo in st.session_state.filtered_data_dict.items():
                 st.markdown("---")
                 st.subheader(f"Dados separados para '{valor_coluna_1}':")
 
                 # Download do arquivo temporário
-                with open(nome_arquivo_temporario, 'rb') as file:
+                with open(nome_arquivo, 'rb') as file:
                     st.download_button(
                         label=f"Baixar Dados para '{valor_coluna_1}'",
                         data=file,
-                        file_name=os.path.basename(nome_arquivo_temporario),
+                        file_name=os.path.basename(nome_arquivo),
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
 
-            # Botão para limpar os dados armazenados em st.session_state
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.info("Antes de fazer outra operação, limpe os dados!", icon=":material/warning:")
-            if st.button("Limpar Dados"):
-                st.session_state.filtered_data_dict = {}
-                st.session_state.separated_data = False
-                st.experimental_rerun()
+        else:
+            st.info("Nenhum dado separado disponível para download.")
+
+        # Botão para limpar os dados armazenados em st.session_state
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.info("Antes de fazer outra operação, limpe os dados!", icon=":material/warning:")
+        if st.button("Limpar Dados"):
+            st.session_state.filtered_data_dict = {}
+            st.session_state.separated_data = False
+            st.experimental_rerun()
 
                 
 # ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
