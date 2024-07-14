@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import io
 from streamlit_option_menu import option_menu
-import streamlit_shadcn_ui as ui
 
 # Configuração da página
 st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout="wide")
