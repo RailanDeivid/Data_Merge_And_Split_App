@@ -311,7 +311,7 @@ def separar_arquivos():
 
                 
 # ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
-cols1, cols2, cols3 = st.columns([1, 1.5, 1])
+cols1, cols2, cols3 = st.columns([1, 1.2, 1])
 with cols2:
     selected_page = option_menu(
         menu_title=None,
