@@ -19,10 +19,13 @@ st.markdown("""
             text-align: center; 
             font-size: 9px;
             color: gray;
+            border: 1px solid gray; /* Adiciona uma borda de 1px sólida cinza */
+            padding: 5px; /* Adiciona um preenchimento interno de 5px */
+            border-radius: 5px; /* Adiciona bordas arredondadas */
         }
     </style>
     """, unsafe_allow_html=True)
-st.markdown("<p class='rounded-info'>💡 Desenvolvido por Railan Deivid.</p>", unsafe_allow_html=True)
+st.markdown("<p class='rounded-info'>💡 Desenvolvido por Railan Deivid</p>", unsafe_allow_html=True)
 
 # ----------------------------------------------- Função para combinar arquivos ------------------------------------- #
 def combinar_arquivos():
