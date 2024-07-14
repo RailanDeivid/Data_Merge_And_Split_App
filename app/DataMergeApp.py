@@ -18,6 +18,10 @@ st.markdown("""
             text-align: center; /* Centraliza o texto */
             font-size: 12px;
             color: hsl(0, 0%, 35%);
+            border: 1px solid hsl(0, 0%, 50%); /* Adiciona uma borda de 1px sólida em cinza */
+            padding: 10px; /* Adiciona espaçamento interno para melhorar a aparência */
+            width: fit-content; /* Ajusta a largura da borda ao conteúdo do texto */
+            margin: auto; /* Centraliza horizontalmente */
         }
         .linkedin-icon {
             width: 15px;
