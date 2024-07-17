@@ -97,8 +97,7 @@ def combinar_arquivos():
                 if select_all_sheets:
                     selected_sheets = sheet_names
                 else:
-                    selected_sheets = st.multiselect(f"Selecione as abas de '{
-                                                     file.name}'", sheet_names, default=sheet_names)
+                    selected_sheets = st.multiselect(f"Selecione as abas de '{file.name}'", sheet_names, default=sheet_names)
 
                 for sheet in selected_sheets:
                     # Lê o DataFrame da aba selecionada
