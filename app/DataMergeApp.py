@@ -135,19 +135,6 @@ def combinar_arquivos():
                 combined_data.to_excel(
                     writer, index=False, sheet_name='DadosCombinados')
 
-                # Formatação da tabela
-                workbook = writer.book
-                worksheet = writer.sheets['DadosCombinados']
-                (max_row, max_col) = combined_data.shape
-
-                column_settings = [{'header': column}
-                                   for column in combined_data.columns]
-                worksheet.add_table(0, 0, max_row, max_col - 1, {
-                    'columns': column_settings,
-                    'name': 'DadosCombinadosTable',
-                    'style': 'TableStyleLight9'
-                })
-
             output.seek(0)
             # Botão de download com o nome personalizado do arquivo
             st.download_button(
