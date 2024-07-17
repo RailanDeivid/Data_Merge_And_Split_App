@@ -116,8 +116,7 @@ def combinar_arquivos():
                     df['Arquivo Origem'] = file.name[:nome_sheet]
                     dfs.append(df)
                 except UnicodeDecodeError:
-                    st.error(f"Erro ao ler o arquivo '{
-                             file.name}'. Verifique o encoding selecionado.")
+                    st.error(f"Erro ao ler o arquivo '{file.name}'. Verifique o encoding selecionado.")
 
         if dfs:
             # Concatena todos os DataFrames em um único DataFrame
@@ -186,25 +185,20 @@ def separar_arquivos():
             # Seleção da coluna para separação
             col_options = df.columns.tolist()
             with cols[1]:
-                selected_column_1 = st.selectbox(
-                    "Selecione a primeira coluna para separar os dados:", col_options)
+                selected_column_1 = st.selectbox("Selecione a primeira coluna para separar os dados:", col_options)
             with cols[2]:
-                metodo_separacao = st.radio(
-                    "Escolha o método de separação:", ('Separar por uma coluna', 'Separar por coluna e abas'))
+                metodo_separacao = st.radio("Escolha o método de separação:", ('Separar por uma coluna', 'Separar por coluna e abas'))
                 if metodo_separacao == 'Separar por coluna e abas':
-                    selected_column_2 = st.selectbox(
-                        "Selecione a segunda coluna para separar os dados:", col_options)
+                    selected_column_2 = st.selectbox("Selecione a segunda coluna para separar os dados:", col_options)
 
         elif uploaded_file.name.endswith('.csv'):
             try:
                 # Se o arquivo for CSV, mostra opções para selecionar separador, encoding e coluna
                 cols = st.columns(3)
                 with cols[0]:
-                    sep = st.selectbox(
-                        "Selecione o separador CSV:", [',', ';'])
+                    sep = st.selectbox("Selecione o separador CSV:", [',', ';'])
                 with cols[1]:
-                    encoding = st.selectbox("Selecione o encoding do arquivo CSV:", [
-                                            'utf-8', 'latin1', 'iso-8859-1'])
+                    encoding = st.selectbox("Selecione o encoding do arquivo CSV:", ['utf-8', 'latin1', 'iso-8859-1'])
 
                 # Lê o DataFrame do arquivo CSV com as opções selecionadas
                 df = pd.read_csv(uploaded_file, sep=sep, encoding=encoding)
@@ -212,12 +206,10 @@ def separar_arquivos():
                 # Seleção da coluna para separação
                 col_options = df.columns.tolist()
                 with cols[2]:
-                    selected_column_1 = st.selectbox(
-                        "Selecione a coluna para separar os dados:", col_options)
+                    selected_column_1 = st.selectbox("Selecione a coluna para separar os dados:", col_options)
 
             except UnicodeDecodeError:
-                st.error(f"Erro ao ler o arquivo '{
-                         uploaded_file.name}'. Verifique o encoding selecionado.")
+                st.error(f"Erro ao ler o arquivo '{uploaded_file.name}'. Verifique o encoding selecionado.")
                 return
 
         # Mostra os dados originais
@@ -271,8 +263,7 @@ def separar_arquivos():
                         # Formata a área dos dados como uma tabela
                         tab = Table(displayName=str(
                             ws.title), ref=ws.dimensions)
-                        tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
-                                                            showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+                        tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                         ws.add_table(tab)
 
                 else:
@@ -293,8 +284,7 @@ def separar_arquivos():
 
                     # Formata a área dos dados como uma tabela
                     tab = Table(displayName=str(ws.title), ref=ws.dimensions)
-                    tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
-                                                        showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+                    tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                     ws.add_table(tab)
 
                 # Guarda os dados filtrados em st.session_state
