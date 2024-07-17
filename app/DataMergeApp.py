@@ -11,7 +11,8 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 
 
 # Configuração da página
-st.set_page_config(page_title="DataMergeApp", page_icon=":file_folder:", layout="wide")
+st.set_page_config(page_title="DataMergeApp",
+                   page_icon=":file_folder:", layout="wide")
 st.markdown("""
     <style>
         .contact-me {
@@ -31,6 +32,8 @@ st.markdown("""
 st.markdown("<p class='contact-me'>💡 Desenvolvido por Railan Deivid<br>Contate-me <a href='https://www.linkedin.com/in/railandeivid/' target='_blank'><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' class='linkedin-icon'></a></p>", unsafe_allow_html=True)
 
 # ----------------------------------------------- Função para combinar arquivos ------------------------------------- #
+
+
 def combinar_arquivos():
     # Setar título
     st.markdown("""
@@ -42,88 +45,109 @@ def combinar_arquivos():
         </style>
         """, unsafe_allow_html=True)
 
-    st.markdown("<h1 class='rounded-title'>Combinar Arquivos</h1><br>", unsafe_allow_html=True)
-    st.write("Faça upload de múltiplos arquivos XLSX ou CSV para combiná-los em um único arquivo XLSX.")
+    st.markdown("<h1 class='rounded-title'>Combinar Arquivos</h1><br>",
+                unsafe_allow_html=True)
+    st.write(
+        "Faça upload de múltiplos arquivos XLSX ou CSV para combiná-los em um único arquivo XLSX.")
     st.info("""Certifique-se de que os arquivos tenham a mesma quantidade de colunas com as mesmas nomenclaturas.
             Caso sejam arquivos de Excel com várias abas a serem combinadas, verifique se os nomes das abas são consistentes em todos os arquivos selecionados.""", icon=":material/info:")
 
-    
     # Upload dos arquivos
-    uploaded_files = st.file_uploader("Escolha arquivos XLSX ou CSV", accept_multiple_files=True, type=['xlsx', 'csv'])
-    
+    uploaded_files = st.file_uploader(
+        "Escolha arquivos XLSX ou CSV", accept_multiple_files=True, type=['xlsx', 'csv'])
+
     if uploaded_files:
         # Checkbox para inserir ou não a coluna de origem, aparece apenas se o arquivo for XLSX
         if any(file.name.endswith('.xlsx') for file in uploaded_files):
-            add_origin_column = st.checkbox("Adicionar coluna com o nome da origem", value=False)
+            add_origin_column = st.checkbox(
+                "Adicionar coluna com o nome da origem", value=False)
             origin_column_name = None
             create_column = False
-            
+
             if add_origin_column:
-                origin_column_name = st.text_input("Nome da coluna de origem", value="Aba Origem")
+                origin_column_name = st.text_input(
+                    "Nome da coluna de origem", value="Aba Origem")
                 create_column = st.button("Criar Coluna")
-        
+
         # Opções para separador e encoding
         if any(file.name.endswith('.csv') for file in uploaded_files):
             cols = st.columns(5)
             with cols[0]:
                 sep = st.selectbox("Selecione o separador CSV:", [',', ';'])
             with cols[1]:
-                encoding = st.selectbox("Selecione o encoding do arquivo CSV:", ['utf-8', 'latin1', 'iso-8859-1'])
-        
+                encoding = st.selectbox("Selecione o encoding do arquivo CSV:", [
+                                        'utf-8', 'latin1', 'iso-8859-1'])
+
         # Lista para armazenar DataFrames de cada arquivo
         dfs = []
-        
+
         for file in uploaded_files:
             # Verifica se o arquivo é XLSX ou CSV
             if file.name.endswith('.xlsx'):
                 # Carrega o arquivo Excel
                 xls = pd.ExcelFile(file)
-                
+
                 # Lista de abas disponíveis no arquivo
                 sheet_names = xls.sheet_names
-                
+
                 # Checkbox para seleção de todas as abas (inicializado como True por padrão)
-                select_all_sheets = st.checkbox(f"Selecionar todas as abas de '{file.name}'", value=True)
-                
+                select_all_sheets = st.checkbox(f"Selecionar todas as abas de '{
+                                                file.name}'", value=True)
+
                 if select_all_sheets:
                     selected_sheets = sheet_names
                 else:
-                    selected_sheets = st.multiselect(f"Selecione as abas de '{file.name}'", sheet_names, default=sheet_names)
-                
-                
+                    selected_sheets = st.multiselect(f"Selecione as abas de '{
+                                                     file.name}'", sheet_names, default=sheet_names)
+
                 for sheet in selected_sheets:
                     # Lê o DataFrame da aba selecionada
                     df = pd.read_excel(file, sheet_name=sheet)
-                    
+
                     # Adiciona uma coluna com o nome da aba origem se a opção estiver selecionada e o botão for clicado
                     if add_origin_column and create_column:
                         df[origin_column_name] = sheet
-                    
+
                     dfs.append(df)
-  
+
             elif file.name.endswith('.csv'):
-                    try:  
-                        # Lê o DataFrame do arquivo CSV com as opções selecionadas
-                        df = pd.read_csv(file, sep=sep, encoding=encoding)
-                        nome_sheet = file.name.rfind('.')
-                        df['Arquivo Origem'] = file.name[:nome_sheet]
-                        dfs.append(df)
-                    except UnicodeDecodeError:
-                        st.error(f"Erro ao ler o arquivo '{file.name}'. Verifique o encoding selecionado.")
-                   
+                try:
+                    # Lê o DataFrame do arquivo CSV com as opções selecionadas
+                    df = pd.read_csv(file, sep=sep, encoding=encoding)
+                    nome_sheet = file.name.rfind('.')
+                    df['Arquivo Origem'] = file.name[:nome_sheet]
+                    dfs.append(df)
+                except UnicodeDecodeError:
+                    st.error(f"Erro ao ler o arquivo '{
+                             file.name}'. Verifique o encoding selecionado.")
+
         if dfs:
             # Concatena todos os DataFrames em um único DataFrame
             combined_data = pd.concat(dfs, ignore_index=True)
-            
+
             # Mostra os dados combinados
             st.subheader("Dados Combinados:")
             st.write(combined_data.head(10))
-            
+
             # Download do arquivo combinado
             output = io.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                combined_data.to_excel(writer, index=False, sheet_name='DadosCombinados')
-            
+                combined_data.to_excel(
+                    writer, index=False, sheet_name='DadosCombinados')
+
+                # Formatação da tabela
+                workbook = writer.book
+                worksheet = writer.sheets['DadosCombinados']
+                (max_row, max_col) = combined_data.shape
+
+                column_settings = [{'header': column}
+                                   for column in combined_data.columns]
+                worksheet.add_table(0, 0, max_row, max_col - 1, {
+                    'columns': column_settings,
+                    'name': 'DadosCombinadosTable',
+                    'style': 'TableStyleLight9'
+                })
+
             output.seek(0)
             # Botão de download com o nome personalizado do arquivo
             st.download_button(
@@ -133,6 +157,7 @@ def combinar_arquivos():
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
     pass
+
 
 def separar_arquivos():
     # Setar título
@@ -145,12 +170,14 @@ def separar_arquivos():
         </style>
         """, unsafe_allow_html=True)
 
-    st.markdown("<h1 class='rounded-title'>Separar Arquivos</h1><br>", unsafe_allow_html=True)
+    st.markdown("<h1 class='rounded-title'>Separar Arquivos</h1><br>",
+                unsafe_allow_html=True)
 
     st.write("Selecione um arquivo XLSX para separá-lo com base em uma coluna ou aba específica ou um arquivo CSV")
-    
+
     # Upload do arquivo
-    uploaded_file = st.file_uploader("Escolha um arquivo XLSX ou CSV", type=['xlsx', 'csv'])
+    uploaded_file = st.file_uploader(
+        "Escolha um arquivo XLSX ou CSV", type=['xlsx', 'csv'])
 
     if uploaded_file:
         # Limpa o st.session_state se um novo arquivo for carregado
@@ -170,24 +197,29 @@ def separar_arquivos():
 
             # Lê o DataFrame da aba selecionada
             df = pd.read_excel(uploaded_file, sheet_name=selected_sheet)
-        
+
             # Seleção da coluna para separação
             col_options = df.columns.tolist()
             with cols[1]:
-                selected_column_1 = st.selectbox("Selecione a primeira coluna para separar os dados:", col_options)
+                selected_column_1 = st.selectbox(
+                    "Selecione a primeira coluna para separar os dados:", col_options)
             with cols[2]:
-                metodo_separacao = st.radio("Escolha o método de separação:", ('Separar por uma coluna', 'Separar por coluna e abas'))
+                metodo_separacao = st.radio(
+                    "Escolha o método de separação:", ('Separar por uma coluna', 'Separar por coluna e abas'))
                 if metodo_separacao == 'Separar por coluna e abas':
-                    selected_column_2 = st.selectbox("Selecione a segunda coluna para separar os dados:", col_options)
+                    selected_column_2 = st.selectbox(
+                        "Selecione a segunda coluna para separar os dados:", col_options)
 
         elif uploaded_file.name.endswith('.csv'):
             try:
                 # Se o arquivo for CSV, mostra opções para selecionar separador, encoding e coluna
                 cols = st.columns(3)
                 with cols[0]:
-                    sep = st.selectbox("Selecione o separador CSV:", [',', ';'])
+                    sep = st.selectbox(
+                        "Selecione o separador CSV:", [',', ';'])
                 with cols[1]:
-                    encoding = st.selectbox("Selecione o encoding do arquivo CSV:", ['utf-8', 'latin1', 'iso-8859-1'])
+                    encoding = st.selectbox("Selecione o encoding do arquivo CSV:", [
+                                            'utf-8', 'latin1', 'iso-8859-1'])
 
                 # Lê o DataFrame do arquivo CSV com as opções selecionadas
                 df = pd.read_csv(uploaded_file, sep=sep, encoding=encoding)
@@ -195,11 +227,12 @@ def separar_arquivos():
                 # Seleção da coluna para separação
                 col_options = df.columns.tolist()
                 with cols[2]:
-                    selected_column_1 = st.selectbox("Selecione a coluna para separar os dados:", col_options)
-
+                    selected_column_1 = st.selectbox(
+                        "Selecione a coluna para separar os dados:", col_options)
 
             except UnicodeDecodeError:
-                st.error(f"Erro ao ler o arquivo '{uploaded_file.name}'. Verifique o encoding selecionado.")
+                st.error(f"Erro ao ler o arquivo '{
+                         uploaded_file.name}'. Verifique o encoding selecionado.")
                 return
 
         # Mostra os dados originais
@@ -229,8 +262,9 @@ def separar_arquivos():
                     # Para cada valor único na segunda coluna dentro do DataFrame filtrado pela primeira coluna
                     for valor_coluna_2 in dados_filtrados_1[selected_column_2].unique():
                         # Filtra o DataFrame com base no valor único da segunda coluna
-                        dados_filtrados_2 = dados_filtrados_1[dados_filtrados_1[selected_column_2] == valor_coluna_2]
-                        
+                        dados_filtrados_2 = dados_filtrados_1[dados_filtrados_1[selected_column_2]
+                                                              == valor_coluna_2]
+
                         # Limpar espaços em branco do nome da aba
                         nome_aba = str(valor_coluna_2).strip()
 
@@ -243,13 +277,15 @@ def separar_arquivos():
 
                         # Adiciona os dados do DataFrame filtrado à planilha
                         df_filtrado_2 = pd.DataFrame(dados_filtrados_2)
-                        df_filtrado_2 = df_filtrado_2.sort_values(by=[selected_column_1, selected_column_2], ascending=True)
+                        df_filtrado_2 = df_filtrado_2.sort_values(
+                            by=[selected_column_1, selected_column_2], ascending=True)
 
                         for row in dataframe_to_rows(df_filtrado_2, index=False, header=True):
                             ws.append(row)
-                        
+
                         # Formata a área dos dados como uma tabela
-                        tab = Table(displayName=str(ws.title), ref=ws.dimensions)
+                        tab = Table(displayName=str(
+                            ws.title), ref=ws.dimensions)
                         tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
                                                             showLastColumn=False, showRowStripes=True, showColumnStripes=True)
                         ws.add_table(tab)
@@ -264,11 +300,12 @@ def separar_arquivos():
 
                     # Adiciona os dados do DataFrame filtrado à planilha
                     df_filtrado_1 = pd.DataFrame(dados_filtrados_1)
-                    df_filtrado_1 = df_filtrado_1.sort_values(by=[selected_column_1], ascending=True)
+                    df_filtrado_1 = df_filtrado_1.sort_values(
+                        by=[selected_column_1], ascending=True)
 
                     for row in dataframe_to_rows(df_filtrado_1, index=False, header=True):
                         ws.append(row)
-                    
+
                     # Formata a área dos dados como uma tabela
                     tab = Table(displayName=str(ws.title), ref=ws.dimensions)
                     tab.tableStyleInfo = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
@@ -288,9 +325,10 @@ def separar_arquivos():
 
                 # Mostra os dados tratados se for XLSX com método 'Separar por uma coluna'
                 if uploaded_file.name.endswith('.xlsx') and metodo_separacao == 'Separar por uma coluna':
-                    df_tratado = pd.read_excel(nome_arquivo, sheet_name=str(valor_coluna_1).replace(" ", "_").replace("/", "_"))
+                    df_tratado = pd.read_excel(nome_arquivo, sheet_name=str(
+                        valor_coluna_1).replace(" ", "_").replace("/", "_"))
                     st.write(df_tratado.head())
-                
+
                 # Download do arquivo separado
                 with open(nome_arquivo, 'rb') as file:
                     st.download_button(
@@ -302,14 +340,14 @@ def separar_arquivos():
 
             # Botão para limpar os dados armazenados em st.session_state
             st.markdown("<br>", unsafe_allow_html=True)
-            st.info("Antes de fazer outra operação, limpe os dados!", icon=":material/warning:")
+            st.info("Antes de fazer outra operação, limpe os dados!",
+                    icon=":material/warning:")
             if st.button("Limpar Dados"):
                 st.session_state.filtered_data_dict = {}
                 st.session_state.separated_data = False
                 st.experimental_rerun()
 
 
-                
 # ------------------------------------------------------ Menu de navegação usando option_menu ------------------------ #
 cols1, cols2, cols3 = st.columns([1, 1.3, 1])
 with cols2:
