@@ -91,8 +91,7 @@ def combinar_arquivos():
                 sheet_names = xls.sheet_names
 
                 # Checkbox para seleção de todas as abas (inicializado como True por padrão)
-                select_all_sheets = st.checkbox(f"Selecionar todas as abas de '{
-                                                file.name}'", value=True)
+                select_all_sheets = st.checkbox(f"Selecionar todas as abas de '{file.name}'", value=True)
 
                 if select_all_sheets:
                     selected_sheets = sheet_names
