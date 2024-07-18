@@ -56,6 +56,12 @@ def combinar_arquivos():
     uploaded_files = st.file_uploader("Escolha arquivos XLSX ou CSV", accept_multiple_files=True, type=['xlsx', 'csv'])
 
     if uploaded_files:
+        # Limpa o st.session_state se um novo arquivo for carregado
+        if 'last_uploaded_file' in st.session_state and st.session_state.last_uploaded_file != uploaded_files.name:
+            st.session_state.filtered_data_dict = {}
+            st.session_state.separated_data = False
+        st.session_state.last_uploaded_file = uploaded_files.name
+        
         # Checkbox para inserir ou não a coluna de origem, aparece apenas se o arquivo for XLSX
         if any(file.name.endswith('.xlsx') for file in uploaded_files):
             add_origin_column = st.checkbox("Adicionar coluna com o nome da origem", value=False)
@@ -149,6 +155,15 @@ def combinar_arquivos():
                 file_name="DadosCombinados.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
+            
+            # Botão para limpar os dados armazenados em st.session_state
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.info("Antes de fazer outra operação, limpe os dados!",
+                    icon=":material/warning:")
+            if st.button("Limpar Dados"):
+                st.session_state.filtered_data_dict = {}
+                st.session_state.separated_data = False
+                st.experimental_rerun()
     pass
 
 
