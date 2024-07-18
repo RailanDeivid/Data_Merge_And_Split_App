@@ -34,8 +34,6 @@ st.markdown("""
 st.markdown("<p class='contact-me'>💡 Desenvolvido por Railan Deivid<br>Contate-me <a href='https://www.linkedin.com/in/railandeivid/' target='_blank'><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' class='linkedin-icon'></a></p>", unsafe_allow_html=True)
 
 # ----------------------------------------------- Função para combinar arquivos ------------------------------------- #
-
-
 def combinar_arquivos():
     # Setar título
     st.markdown("""
@@ -57,11 +55,11 @@ def combinar_arquivos():
 
     if uploaded_files:
         # Limpa o st.session_state se um novo arquivo for carregado
-        if 'last_uploaded_file' in st.session_state and st.session_state.last_uploaded_file != uploaded_files.name:
+        if 'last_uploaded_files' in st.session_state and st.session_state.last_uploaded_files != [file.name for file in uploaded_files]:
             st.session_state.filtered_data_dict = {}
             st.session_state.separated_data = False
-        st.session_state.last_uploaded_file = uploaded_files.name
-        
+        st.session_state.last_uploaded_files = [file.name for file in uploaded_files]
+
         # Checkbox para inserir ou não a coluna de origem, aparece apenas se o arquivo for XLSX
         if any(file.name.endswith('.xlsx') for file in uploaded_files):
             add_origin_column = st.checkbox("Adicionar coluna com o nome da origem", value=False)
@@ -165,6 +163,7 @@ def combinar_arquivos():
                 st.session_state.separated_data = False
                 st.experimental_rerun()
     pass
+
 
 
 def separar_arquivos():
