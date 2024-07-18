@@ -198,7 +198,7 @@ def separar_arquivos():
             xls = pd.ExcelFile(uploaded_file)
             sheet_names = xls.sheet_names
 
-            cols = st.columns(3)
+            cols = st.columns(4)
             with cols[0]:
                 selected_sheet = st.selectbox("Selecione a aba:", sheet_names)
 
