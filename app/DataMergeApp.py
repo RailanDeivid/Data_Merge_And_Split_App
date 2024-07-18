@@ -217,7 +217,7 @@ def separar_arquivos():
         elif uploaded_file.name.endswith('.csv'):
             try:
                 # Se o arquivo for CSV, mostra opções para selecionar separador, encoding e coluna
-                cols = st.columns(3)
+                cols = st.columns(5)
                 with cols[0]:
                     sep = st.selectbox("Selecione o separador CSV:", [',', ';'])
                 with cols[1]:
