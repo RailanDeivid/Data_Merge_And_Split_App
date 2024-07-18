@@ -8,6 +8,8 @@ from openpyxl import Workbook
 from openpyxl.styles import NamedStyle
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl import load_workbook
+
 
 
 # Configuração da página
@@ -45,28 +47,23 @@ def combinar_arquivos():
         </style>
         """, unsafe_allow_html=True)
 
-    st.markdown("<h1 class='rounded-title'>Combinar Arquivos</h1><br>",
-                unsafe_allow_html=True)
-    st.write(
-        "Faça upload de múltiplos arquivos XLSX ou CSV para combiná-los em um único arquivo XLSX.")
+    st.markdown("<h1 class='rounded-title'>Combinar Arquivos</h1><br>", unsafe_allow_html=True)
+    st.write("Faça upload de múltiplos arquivos XLSX ou CSV para combiná-los em um único arquivo XLSX.")
     st.info("""Certifique-se de que os arquivos tenham a mesma quantidade de colunas com as mesmas nomenclaturas.
             Caso sejam arquivos de Excel com várias abas a serem combinadas, verifique se os nomes das abas são consistentes em todos os arquivos selecionados.""", icon=":material/info:")
 
     # Upload dos arquivos
-    uploaded_files = st.file_uploader(
-        "Escolha arquivos XLSX ou CSV", accept_multiple_files=True, type=['xlsx', 'csv'])
+    uploaded_files = st.file_uploader("Escolha arquivos XLSX ou CSV", accept_multiple_files=True, type=['xlsx', 'csv'])
 
     if uploaded_files:
         # Checkbox para inserir ou não a coluna de origem, aparece apenas se o arquivo for XLSX
         if any(file.name.endswith('.xlsx') for file in uploaded_files):
-            add_origin_column = st.checkbox(
-                "Adicionar coluna com o nome da origem", value=False)
+            add_origin_column = st.checkbox("Adicionar coluna com o nome da origem", value=False)
             origin_column_name = None
             create_column = False
 
             if add_origin_column:
-                origin_column_name = st.text_input(
-                    "Nome da coluna de origem", value="Aba Origem")
+                origin_column_name = st.text_input("Nome da coluna de origem", value="Aba Origem")
                 create_column = st.button("Criar Coluna")
 
         # Opções para separador e encoding
@@ -75,8 +72,7 @@ def combinar_arquivos():
             with cols[0]:
                 sep = st.selectbox("Selecione o separador CSV:", [',', ';'])
             with cols[1]:
-                encoding = st.selectbox("Selecione o encoding do arquivo CSV:", [
-                                        'utf-8', 'latin1', 'iso-8859-1'])
+                encoding = st.selectbox("Selecione o encoding do arquivo CSV:", ['utf-8', 'latin1', 'iso-8859-1'])
 
         # Lista para armazenar DataFrames de cada arquivo
         dfs = []
@@ -129,14 +125,27 @@ def combinar_arquivos():
             # Download do arquivo combinado
             output = io.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                combined_data.to_excel(
-                    writer, index=False, sheet_name='DadosCombinados')
+                combined_data.to_excel(writer, index=False, sheet_name='DadosCombinados')
 
+            # Reabertura do arquivo com openpyxl para adicionar a formatação da tabela
             output.seek(0)
+            workbook = load_workbook(output)
+            worksheet = workbook['DadosCombinados']
+            table = Table(displayName='DadosCombinadosTable', ref=worksheet.dimensions)
+            style = TableStyleInfo(name='TableStyleLight9', showFirstColumn=False,
+                                   showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+            table.tableStyleInfo = style
+            worksheet.add_table(table)
+
+            # Salvando novamente o arquivo formatado
+            formatted_output = io.BytesIO()
+            workbook.save(formatted_output)
+            formatted_output.seek(0)
+
             # Botão de download com o nome personalizado do arquivo
             st.download_button(
                 label="Baixar Dados Combinados",
-                data=output,
+                data=formatted_output,
                 file_name="DadosCombinados.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
