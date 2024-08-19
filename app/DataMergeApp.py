@@ -15,6 +15,7 @@ from openpyxl import load_workbook
 # Configuração da página
 st.set_page_config(page_title="DataMergeApp",
                    page_icon=":file_folder:", layout="wide")
+
 st.markdown("""
     <style>
         .contact-me {
