@@ -2,25 +2,24 @@
 <img loading="lazy" src="http://img.shields.io/static/v1?label=STATUS&message=FINALIZADO&color=GREEN&style=for-the-badge"/>
 </p>
 
-# Aplicativo Web para Envio de E-mails em Massa
+# Aplicativo Web para Separar e Juntar Arquivos CSV e Excel
 
 ## Descrição
 
-Este aplicativo foi criado para resolver o problema de envio de e-mails em massa de forma eficiente e automatizada. Desenvolvido com Python e Streamlit, o app oferece uma interface amigável que permite aos usuários enviar e-mails personalizados para uma lista de destinatários com apenas alguns cliques.
+Este aplicativo foi criado para facilitar a manipulação de arquivos CSV e Excel, permitindo que usuários possam, de maneira simples, juntar vários arquivos em um único arquivo unificado ou separar dados dentro de um arquivo existente. Desenvolvido com Python e Streamlit, o app oferece uma interface amigável que simplifica tarefas complexas de manipulação de dados.
 
 ## Funcionalidades
 
-* **Registro de E-mail Remetente:** Permite ao usuário cadastrar seu e-mail e credenciais para envio **(O e-mail e senha colocados não são salvo em nenhum lugar, é totalmente seguro. Ficam salvo apenas em cash para realizar os disparos. basta um F5 na pagina e já são apagados)**.
-* **Upload de Arquivo Excel:** O usuário pode carregar um arquivo Excel contendo os e-mails dos destinatários e outros dados necessários.
-* **Personalização de Mensagens:** Opção de personalizar as mensagens com o nome do destinatário e incluir uma saudação baseada no horário (Bom dia, Boa tarde, Boa noite).
-* **Envio em Massa:** Possibilidade de enviar e-mails para todos os destinatários listados no arquivo Excel de uma só vez.
-* **Opções de CC:** Escolha entre um CC global para todos os e-mails ou um CC específico para cada destinatário.
-* **Suporte a Múltiplos Provedores de E-mail:** Suporte para diferentes provedores de e-mail como Gmail, Hotmail, entre outros.
+* **Upload de Arquivos CSV/Excel:** Os usuários podem carregar múltiplos arquivos CSV ou Excel para serem manipulados.
+* **Junção de Arquivos:** Permite ao usuário combinar vários arquivos CSV ou Excel em um único arquivo unificado, facilitando a análise de grandes volumes de dados.
+* **Separação de Arquivos:** Opção de separar um arquivo existente em múltiplos arquivos, com base em uma coluna específica.
+* **Download do Arquivo Resultante:** Após a junção ou separação, o usuário pode baixar o arquivo resultante em formato Excel (.xlsx) para uso posterior.
+* **Interface Amigável:** O design intuitivo do aplicativo permite que mesmo usuários sem experiência técnica possam manipular arquivos de maneira eficiente.
 
 
 ## Deploy Streamlit
 
-Link app: [Web App Envio de e-mails em massa](https://email-sending.streamlit.app/)
+Link app: [Aplicativo Web para Separar e Juntar Arquivos CSV e Excel ](https://data-merge-and-split-app.streamlit.app/)
 
 
 ![image](https://github.com/user-attachments/assets/ee7589eb-eee2-44e0-b654-693b34ed8f96)
